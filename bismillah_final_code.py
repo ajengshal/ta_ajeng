@@ -1,4 +1,5 @@
 from pymodbus.client.sync import ModbusTcpClient as ModbusClientTCP
+from pymodbus.exceptions import ModbusIOException
 from datetime import datetime, timedelta
 import mysql.connector
 import logging
