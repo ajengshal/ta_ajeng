@@ -31,11 +31,11 @@ def read_modbus_data(client, slave_id, ip):
         mycursor.execute(sql, val)
         mydb.commit()
 
-        print(f"IP: {ip}, Slave ID: {slave_id}, Meter ID: {meter_id}, Data inserted.")
+        print("IP: {}, Slave ID: {}, Meter ID: {}, Data inserted.".format(ip, slave_id, meter_id))
         print("---------------------------------------------------------------------------------------------------------------")
     
     except Exception as e:
-        print(f"IP: {ip}, Slave ID: {slave_id}, error, cek koneksi atau data: {str(e)}")
+        print("IP: {}, Slave ID: {}, error, cek koneksi atau data: {}".format(ip, slave_id, str(e)))
         print("---------------------------------------------------------------------------------------------------------------")
         time.sleep(1)
 
@@ -66,7 +66,7 @@ try:
             try:
                 modbus(device["ip"], device["slave_ids"])
             except Exception as e:
-                print(f"Error with device {device['ip']}: {str(e)}")
+                print("Error with device {}: {}".format(device['ip'],str(e)))
                 continue  
 
         print("Waiting for the next minute...")
