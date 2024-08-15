@@ -1,5 +1,4 @@
-from pymodbus.client.sync import ModbusTcpClient as ModbusClientTCP
-from pymodbus.exceptions import ModbusIOException
+from pymodbus.client import ModbusTcpClient as ModbusClientTCP
 from datetime import datetime, timedelta
 import mysql.connector
 import logging
@@ -19,10 +18,7 @@ def read_modbus_data(client, slave_id, ip):
     try:
         # Membaca data suhu dan kelembaban dengan satu kali pembacaan
         result = client.read_input_registers(1, 2, slave=slave_id)  # Membaca 2 register (1 untuk suhu dan 1 untuk kelembaban)
-
-        if isinstance(result, ModbusIOException):
-            raise result
-            
+        
         # Mengambil data sebagai integer langsung dari register
         temperature = result.registers[0] / 10.0  # Misal, data dalam skala 10
         humidity = result.registers[1] / 10.0  # Misal, data dalam skala 10
@@ -38,12 +34,8 @@ def read_modbus_data(client, slave_id, ip):
         print("IP: {}, Slave ID: {}, Meter ID: {}, Data inserted.".format(ip, slave_id, meter_id))
         print("---------------------------------------------------------------------------------------------------------------")
     
-    except ModbusIOException as e:
-        print(f"IP: {ip}, Slave ID: {slave_id}, error in Modbus communication: {str(e)}")
-        print("---------------------------------------------------------------------------------------------------------------")
-    
     except Exception as e:
-        print(f"IP: {ip}, Slave ID: {slave_id}, general error: {str(e)}")
+        print("IP: {}, Slave ID: {}, error, cek koneksi atau data: {}".format(ip, slave_id, str(e)))
         print("---------------------------------------------------------------------------------------------------------------")
         time.sleep(1)
 
@@ -63,8 +55,9 @@ mycursor = mydb.cursor()
 # Data Modbus IP dan Slave ID
 modbus_devices = [
     {"ip": "10.6.30.182", "slave_ids": [1, 2, 3, 4]},
-    {"ip": "10.6.30.178", "slave_ids": [7, 8, 9, 10, 11]}
-    #{"ip": "10.6.30.xxx", "slave_ids": [5, 6, 12, 13, 14]}
+    {"ip": "10.6.30.178", "slave_ids": [7, 8, 9, 10, 11]},
+    {"ip": "10.6.30.184", "slave_ids": [5, 6, 12, 13, 14]},
+    {"ip":"167.205.55.171", "slave_ids":[11, 12, 13]}
 ]
 
 try:
